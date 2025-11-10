@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,8 +79,8 @@
             to { opacity: 0; }
         }
 
-        /* Apply popIn animation to overlay on load */
-        #birthdayOverlay {
+        /* Apply popIn animation to new pages */
+        .pop-in {
             animation: popIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
         
@@ -94,20 +93,27 @@
 </head>
 <body>
 
-    <!-- 3. HTML Structure: Birthday Overlay -->
-    <div id="birthdayOverlay" class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-95 flex flex-col items-center justify-center z-50">
+    <!-- Page 1 - Start Button -->
+    <div id="page1_start" class="fixed top-0 left-0 w-screen h-screen bg-black flex flex-col items-center justify-center z-50 pop-in">
+        <button id="startButton" 
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-200 text-2xl">
+            Start
+        </button>
+    </div>
+    
+    <!-- Page 2 - Birthday Wish (Hidden by default) -->
+    <div id="page2_birthday" class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-95 flex flex-col items-center justify-center z-40 hidden">
         <h1 class="text-6xl font-bold text-white mb-8 text-center animate-pulse">
             Happy Birthday!
         </h1>
-        <button id="birthdayButton" 
+        <button id="continueButton" 
                 class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-200 text-2xl">
-            Click to Start
+            Continue to View
         </button>
     </div>
 
-    <!-- 4. HTML Structure: The App Container (Still hidden by default) -->
-    <!-- MODIFICATION: The Control Panel is now GONE. -->
-    <div id="appContainer" class="hidden">
+    <!-- Page 3 - The Animation App (Hidden by default) -->
+    <div id="page3_animation" class="hidden">
         <!-- Canvas Wrapper -->
         <div id="canvasWrapper">
             <!-- This is the placeholder text shown at the start -->
@@ -118,34 +124,28 @@
             <!-- This is the visible canvas where the animation happens -->
             <canvas id="pixelCanvas"></canvas>
         </div>
+        
+        <!-- This is an invisible canvas used to process the image -->
+        <canvas id="sourceCanvas"></canvas>
+
+        <!-- HTML5 Audio element for music.mp3 -->
+        <audio id="birthdayAudio" src="./music.mp3" preload="auto" loop></audio> <!-- MODIFICATION: Added loop -->
     </div>
 
-    <!-- This is an invisible canvas used to process the image -->
-    <canvas id="sourceCanvas"></canvas>
-
-    <!-- HTML5 Audio element for music.mp3 -->
-    <audio id="birthdayAudio" src="./music.mp3" preload="auto"></audio>
 
     <!-- 5. JavaScript Logic -->
     <script>
         // --- Get DOM Elements ---
-        
-        // --- Birthday Screen Elements ---
-        const birthdayOverlay = document.getElementById('birthdayOverlay');
-        const birthdayButton = document.getElementById('birthdayButton');
-        const appContainer = document.getElementById('appContainer');
-
-        // App elements
-        // MODIFICATION: Removed all control panel element getters
-        
+        const page1_start = document.getElementById('page1_start');
+        const page2_birthday = document.getElementById('page2_birthday');
+        const page3_animation = document.getElementById('page3_animation');
+        const startButton = document.getElementById('startButton');
+        const continueButton = document.getElementById('continueButton');
         const sourceCanvas = document.getElementById('sourceCanvas');
         const sourceCtx = sourceCanvas.getContext('2d');
         const pixelCanvas = document.getElementById('pixelCanvas');
         const pixelCtx = pixelCanvas.getContext('2d');
-        
         const canvasPlaceholder = document.getElementById('canvasPlaceholder');
-
-        // --- Get Audio Element ---
         const birthdayAudio = document.getElementById('birthdayAudio');
 
         // --- State Variables ---
@@ -156,44 +156,56 @@
         // --- Animation Speed ---
         const EASING_FACTOR = 0.25; 
 
-        // --- MODIFICATION: Removed all Gemini API variables ---
-
-        
-        // --- Animated Birthday Button Click Handler ---
-        birthdayButton.addEventListener('click', () => {
+        // --- MODIFICATION: Page 1 Button Click (Starts Music) ---
+        startButton.addEventListener('click', () => {
             
-            // 1. Unlock browser audio by playing and pausing it (muted)
+            // 1. Unlock browser audio and START MUSIC
             birthdayAudio.muted = true;
             birthdayAudio.play().then(() => {
-                birthdayAudio.pause();
                 birthdayAudio.muted = false;
-                console.log("Audio context started.");
+                birthdayAudio.currentTime = 0; // Rewind
+                birthdayAudio.play(); // Play for real
+                console.log("Audio context started, music playing.");
             }).catch(e => {
                 console.warn("Audio unlock failed, will try again later.", e);
             });
 
             // 2. Add the fade-out class to start the animation
-            birthdayOverlay.classList.add('fade-out');
+            page1_start.classList.add('fade-out');
             
             // 3. Listen for when the animation is complete
-            birthdayOverlay.addEventListener('animationend', () => {
-                // 4. Now, hide the overlay completely
-                birthdayOverlay.classList.add('hidden');
-                // 5. And show the main app
-                appContainer.classList.remove('hidden');
+            page1_start.addEventListener('animationend', () => {
+                // 4. Now, hide Page 1 completely
+                page1_start.classList.add('hidden');
+                // 5. And show Page 2
+                page2_birthday.classList.remove('hidden');
+                page2_birthday.classList.add('pop-in'); // Add pop-in animation
+            }, { once: true }); 
+        });
 
-                // 6. Load default sketch.jpg
+        // --- MODIFICATION: Page 2 Button Click (Music is already playing) ---
+        continueButton.addEventListener('click', () => {
+            
+            // 1. Add the fade-out class to start the animation
+            page2_birthday.classList.add('fade-out');
+            
+            // 2. Listen for when the animation is complete
+            page2_birthday.addEventListener('animationend', () => {
+                // 3. Now, hide Page 2 completely
+                page2_birthday.classList.add('hidden');
+                // 4. And show the main app (Page 3)
+                page3_animation.classList.remove('hidden');
+
+                // 5. Load default sketch.jpg
                 console.log("Loading default image: sketch.jpg");
                 canvasPlaceholder.style.display = 'block';
                 canvasPlaceholder.textContent = 'Loading sketch...';
                 
-                // This function will load the image AND start the animation/music
+                // This function will load the image AND start the animation
                 loadImageFromSrc('./sketch.jpg'); 
 
-            }, { once: true }); // {once: true} ensures this listener only runs once
+            }, { once: true }); 
         });
-
-        // --- MODIFICATION: Removed all API and upload-related functions ---
 
         /**
          * Loads an image from a source (file, base64, or URL) into the app.
@@ -222,7 +234,6 @@
             originalImage.src = imageSrc;
         }
 
-        // --- MODIFICATION: Removed all event listeners for controls ---
       
         // --- Animation Logic ---
         
@@ -238,7 +249,6 @@
                 animationId = null;
             }
             
-            // --- Logic is now fixed to 1024x1024 ---
             const canvasSize = 1024;
             
             pixelCanvas.width = canvasSize;
@@ -256,10 +266,7 @@
 
             generatePixelData(); 
             
-            // --- Start music and animation together ---
-            birthdayAudio.currentTime = 0; // Rewind the music
-            birthdayAudio.play(); // Play the music
-            
+            // --- MODIFICATION: Music is already playing, so just start animation ---
             animate(); // Start the pixel animation
         }
 
@@ -275,19 +282,18 @@
             const canvasW = pixelCanvas.width; 
             const canvasH = pixelCanvas.height; 
 
-            // --- Optimization: Get image data once ---
             const imageData = sourceCtx.getImageData(0, 0, w, h).data;
 
             for (let y = 0; y < h; y += size) { 
                 for (let x = 0; x < w; x += size) { 
                     
-                    const index = (y * w + x) * 4; // Calculate index in the 1D array
+                    const index = (y * w + x) * 4; 
                     const r = imageData[index];
                     const g = imageData[index + 1];
                     const b = imageData[index + 2];
                     const a = imageData[index + 3];
 
-                    if (a > 20) { // Only add pixels that are not fully transparent
+                    if (a > 20) { 
                         flyingPixels.push({
                             endX: x, 
                             endY: y, 
@@ -320,14 +326,12 @@
                 const dy = pixel.endY - pixel.currentY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
-                if (dist > 0.5) { // If pixel is not at its final spot
-                    allPixelsInPlace = false; // Mark that animation is not done
+                if (dist > 0.5) { 
+                    allPixelsInPlace = false; 
                     
-                    // Move pixel closer to its end position
                     pixel.currentX += dx * EASING_FACTOR;
                     pixel.currentY += dy * EASING_FACTOR;
                 } else {
-                    // Snap to final position
                     pixel.currentX = pixel.endX;
                     pixel.currentY = pixel.endY;
                 }
@@ -337,10 +341,8 @@
             }
 
             if (!allPixelsInPlace) {
-                // If animation is not done, request the next frame
                 animationId = requestAnimationFrame(animate);
             } else {
-                // Animation is complete
                 animationId = null;
                 console.log("Animation Complete!");
                 
@@ -352,5 +354,6 @@
     </script>
 </body>
 </html>
+
 
 
