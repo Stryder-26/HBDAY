@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Janhveem</title>
-    <!-- 1. Load Tailwind CSS -->
+    <title>Pixel Render Fx</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. CSS Styling -->
+    <!-- FAVICON FIX: Birthday Cake Emoji -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
         
@@ -23,7 +24,6 @@
             width: 100vw;
         }
         
-        /* Page container helper */
         .page {
             position: fixed;
             top: 0;
@@ -119,7 +119,6 @@
             object-fit: cover;
         }
         
-        /* Fallback text for images */
         .gallery-card img::before {
             content: "Image loading...";
             display: block;
@@ -127,11 +126,59 @@
             padding-top: 180px;
             color: #888;
         }
+
+        /* --- FIXED: Birthday Text Overlay Styles --- */
+        #birthdayTextOverlay {
+            position: absolute;
+            bottom: 8%; /* Slightly higher to ensure visibility on all screens */
+            left: 0;
+            width: 100%;
+            z-index: 100; /* MAX Z-INDEX to sit on top of everything */
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; 
+            pointer-events: none; 
+        }
+
+        .letter-span {
+            display: inline-block;
+            opacity: 0; /* Hidden initially */
+            transform: translateY(40px); /* Start lower for dramatic effect */
+            margin-right: 0.05em;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.8); /* Stronger shadow for visibility */
+        }
+
+        .space-span {
+            display: inline-block;
+            width: 0.6em; 
+        }
+
+        .animate-letter {
+            animation: letterFadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes letterFadeInUp {
+            0% { 
+                opacity: 0; 
+                transform: translateY(40px) scale(0.8);
+                text-shadow: 0 0 0 rgba(255,255,255,0);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+                text-shadow: 0 0 30px rgba(255,255,255,1); /* Bright glow */
+            }
+        }
+
+        .hidden-overlay {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Page 1 - Start Button -->
+    <!-- Page 1 - Start -->
     <div id="page1_start" class="page z-50 pop-in">
         <button id="startButton" 
                 class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-200 text-2xl">
@@ -139,10 +186,10 @@
         </button>
     </div>
     
-    <!-- Page 2 - Birthday Wish (Hidden by default) -->
+    <!-- Page 2 - Birthday Wish -->
     <div id="page2_birthday" class="page z-40 hidden">
         <h1 class="text-6xl font-bold text-white mb-8 text-center animate-pulse">
-            Happy Birthday MJ {Mishra Janhvee}!
+            Happy Birthday!
         </h1>
         <button id="birthdayContinueButton" 
                 class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-200 text-2xl">
@@ -150,115 +197,67 @@
         </button>
     </div>
 
-    <!-- NEW: Page 3 - Memory Gallery (Hidden by default) -->
+    <!-- Page 3 - Gallery -->
     <div id="page3_gallery" class="page z-30 hidden">
         <h2 class="text-4xl font-bold text-white mb-4 text-center px-4">
             A Few Happy Memories...
         </h2>
         
-        <!-- The "Rolling" Card Scroller -->
         <div id="galleryScroller">
-            <!-- Card 1 -->
-            <div class="gallery-card">
-                <img src="./IMG-20250915-WA0056.jpg" alt="Memory 1" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250915-WA0056.jpg'">
-            </div>
-            
-            <!-- Card 2 (Video) -->
-            <div class="gallery-card">
-                <video src="./VID-20250915-WA0030.mp4" controls preload="metadata"></video>
-            </div>
-            
-            <!-- Card 3 -->
-            <div class="gallery-card">
-                <img src="./IMG-20250915-WA0067.jpg" alt="Memory 2" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250915-WA0067.jpg'">
-            </div>
-            
-            <!-- Card 4 -->
-            <div class="gallery-card">
-                <img src="./IMG-20250915-WA0068~2.jpg" alt="Memory 3" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250915-WA0068~2.jpg'">
-            </div>
-            
-            <!-- Card 5 -->
-            <div class="gallery-card">
-                <img src="./IMG-20250919-WA0238.jpg" alt="Memory 4" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250919-WA0238.jpg'">
-            </div>
-            
-            <!-- Card 6 -->
-            <div class="gallery-card">
-                <img src="./Snapchat-2031502399.jpg" alt="Memory 5" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Snapchat-2031502399.jpg'">
-            </div>
-            
-            <!-- Card 7 -->
-            <div class="gallery-card">
-                <img src="./IMG_20250727_212036_193.webp" alt="Memory 6" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG_20250727_212036_193.webp'">
-            </div>
-
-            <!-- Card 8 -->
-            <div class="gallery-card">
-                <img src="./IMG_20250822_144858361~2.jpg" alt="Memory 7" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG_20250822_144858361~2.jpg'">
-            </div>
-
-            <!-- Card 9 -->
-            <div class="gallery-card">
-                <img src="./IMG_20250919_135356382_HDR_PORTRAIT (1).jpg" alt="Memory 8" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG_20250919...jpg'">
-            </div>
-
-            <!-- Card 10 -->
-            <div class="gallery-card">
-                <img src="./Screenshot_20250831-180221.Moto App Launcher.jpg" alt="Memory 9" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20250831...jpg'">
-            </div>
-
-            <!-- Card 11 -->
-            <div class="gallery-card">
-                <img src="./Screenshot_20251110-225727.Moto App Launcher.png" alt="Memory 10" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'">
-            </div>
-
-            <!-- Card 12 -->
-            <div class="gallery-card">
-                <img src="./Screenshot_20251110-225746.Moto App Launcher.png" alt="Memory 11" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'">
-            </div>
-
-            <!-- Card 13 -->
-            <div class="gallery-card">
-                <img src="./Screenshot_20251110-225806.Moto App Launcher.png" alt="Memory 12" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'">
-            </div>
-
-            <!-- Card 14 -->
-            <div class="gallery-card">
-                <img src="./Screenshot_20251110-225825.Moto App Launcher.png" alt="Memory 13" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'">
-            </div>
-            
+             <div class="gallery-card"><img src="./IMG-20250915-WA0055.jpg" alt="Memory 0" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250915-WA0055.jpg'"></div>
+            <div class="gallery-card"><img src="./IMG-20250915-WA0056.jpg" alt="Memory 1" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250915-WA0056.jpg'"></div>
+            <div class="gallery-card"><video src="./VID-20250915-WA0030.mp4" controls preload="metadata"></video></div>
+            <div class="gallery-card"><img src="./IMG-20250915-WA0067.jpg" alt="Memory 2" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250915-WA0067.jpg'"></div>
+            <div class="gallery-card"><img src="./IMG-20250915-WA0068~2.jpg" alt="Memory 3" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250915-WA0068~2.jpg'"></div>
+            <div class="gallery-card"><img src="./IMG-20250919-WA0238.jpg" alt="Memory 4" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG-20250919-WA0238.jpg'"></div>
+            <div class="gallery-card"><img src="./Snapchat-2031502399.jpg" alt="Memory 5" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Snapchat-2031502399.jpg'"></div>
+            <div class="gallery-card"><img src="./IMG_20250727_212036_193.webp" alt="Memory 6" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG_20250727_212036_193.webp'"></div>
+            <div class="gallery-card"><img src="./IMG_20250822_144858361~2.jpg" alt="Memory 7" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG_20250822_144858361~2.jpg'"></div>
+            <div class="gallery-card"><img src="./IMG_20250919_135356382_HDR_PORTRAIT (1).jpg" alt="Memory 8" onerror="this.src='https://placehold.co/300x400/222/FFF?text=IMG_20250919...jpg'"></div>
+            <div class="gallery-card"><img src="./Screenshot_20250831-180221.Moto App Launcher.jpg" alt="Memory 9" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20250831...jpg'"></div>
+            <div class="gallery-card"><img src="./Screenshot_20251110-225727.Moto App Launcher.png" alt="Memory 10" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'"></div>
+            <div class="gallery-card"><img src="./Screenshot_20251110-225746.Moto App Launcher.png" alt="Memory 11" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'"></div>
+            <div class="gallery-card"><img src="./Screenshot_20251110-225806.Moto App Launcher.png" alt="Memory 12" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'"></div>
+            <div class="gallery-card"><img src="./Screenshot_20251110-225825.Moto App Launcher.png" alt="Memory 13" onerror="this.src='https://placehold.co/300x400/222/FFF?text=Screenshot_20251110...png'"></div>
         </div>
         
+        <div class="text-white text-xl mt-8 text-center">
+            <div id="ageTimer" class="font-mono text-3xl mb-2"></div>
+            Enjoy your early twenties!
+        </div>
+
         <button id="galleryContinueButton" 
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-200 text-2xl mt-8">
             View Your Gift
         </button>
     </div>
 
-    <!-- Page 4 - The Animation App (Hidden by default) -->
+    <!-- Page 4 - Animation App -->
     <div id="page4_animation" class="hidden">
         <div id="canvasWrapper">
             <p id="canvasPlaceholder" class="text-gray-500 text-xl">Loading...</p>
             <canvas id="pixelCanvas"></canvas>
+            
+            <!-- CONTAINER FOR HAPPIEST BIRTHDAY TEXT -->
+            <div id="birthdayTextOverlay" class="text-white text-6xl font-extrabold hidden-overlay">
+                <!-- Dynamic letters injected here -->
+            </div>
         </div>
         <canvas id="sourceCanvas"></canvas>
         <audio id="birthdayAudio" src="./music.mp3" preload="auto" loop></audio>
     </div>
 
-
-    <!-- 5. JavaScript Logic -->
     <script>
-        // --- Get DOM Elements ---
+        // DOM Elements
         const page1_start = document.getElementById('page1_start');
         const page2_birthday = document.getElementById('page2_birthday');
-        const page3_gallery = document.getElementById('page3_gallery'); // New Page 3
-        const page4_animation = document.getElementById('page4_animation'); // Old Page 3 is now 4
-
+        const page3_gallery = document.getElementById('page3_gallery');
+        const page4_animation = document.getElementById('page4_animation');
         const startButton = document.getElementById('startButton');
         const birthdayContinueButton = document.getElementById('birthdayContinueButton');
-        const galleryContinueButton = document.getElementById('galleryContinueButton'); // New Button
-
+        const galleryContinueButton = document.getElementById('galleryContinueButton');
+        const ageTimer = document.getElementById('ageTimer');
+        const birthdayTextOverlay = document.getElementById('birthdayTextOverlay');
         const sourceCanvas = document.getElementById('sourceCanvas');
         const sourceCtx = sourceCanvas.getContext('2d');
         const pixelCanvas = document.getElementById('pixelCanvas');
@@ -270,17 +269,37 @@
         let flyingPixels = [];
         let animationId = null;
         const EASING_FACTOR = 0.25; 
+        const birthDate = new Date('2005-11-12T01:00:00'); 
 
-        // --- Page 1 Button Click (Starts Music) ---
+        // --- Age Timer ---
+        function updateAge() {
+            const now = new Date();
+            const diffMs = now.getTime() - birthDate.getTime();
+            if (diffMs < 0) { ageTimer.textContent = "Loading age..."; return; }
+            let absDiffMs = diffMs;
+            const years = Math.floor(absDiffMs / (1000 * 60 * 60 * 24 * 365.25));
+            absDiffMs -= years * (1000 * 60 * 60 * 24 * 365.25);
+            const months = Math.floor(absDiffMs / (1000 * 60 * 60 * 24 * (365.25 / 12)));
+            absDiffMs -= months * (1000 * 60 * 60 * 24 * (365.25 / 12));
+            const days = Math.floor(absDiffMs / (1000 * 60 * 60 * 24));
+            absDiffMs -= days * (1000 * 60 * 60 * 24);
+            const hours = Math.floor(absDiffMs / (1000 * 60 * 60));
+            absDiffMs -= hours * (1000 * 60 * 60);
+            const minutes = Math.floor(absDiffMs / (1000 * 60));
+            absDiffMs -= minutes * (1000 * 60);
+            const seconds = Math.floor(absDiffMs / 1000);
+            ageTimer.textContent = `${String(years).padStart(2, '0')}Y ${String(months).padStart(2, '0')}M ${String(days).padStart(2, '0')}D ` +
+                `${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M ${String(seconds).padStart(2, '0')}S`;
+        }
+
+        // --- Page Transitions ---
         startButton.addEventListener('click', () => {
             birthdayAudio.muted = true;
             birthdayAudio.play().then(() => {
                 birthdayAudio.muted = false;
                 birthdayAudio.currentTime = 0;
                 birthdayAudio.play();
-                console.log("Audio context started, music playing.");
             }).catch(e => console.warn("Audio unlock failed", e));
-
             page1_start.classList.add('fade-out');
             page1_start.addEventListener('animationend', () => {
                 page1_start.classList.add('hidden');
@@ -289,80 +308,71 @@
             }, { once: true }); 
         });
 
-        // --- Page 2 Button Click (Fades to Gallery) ---
         birthdayContinueButton.addEventListener('click', () => {
             page2_birthday.classList.add('fade-out');
             page2_birthday.addEventListener('animationend', () => {
                 page2_birthday.classList.add('hidden');
-                // --- NEW: Show Page 3 (Gallery) ---
                 page3_gallery.classList.remove('hidden');
                 page3_gallery.classList.add('pop-in');
+                updateAge(); setInterval(updateAge, 1000);
             }, { once: true }); 
         });
 
-        // --- NEW: Page 3 Button Click (Fades to Animation) ---
         galleryContinueButton.addEventListener('click', () => {
             page3_gallery.classList.add('fade-out');
             page3_gallery.addEventListener('animationend', () => {
                 page3_gallery.classList.add('hidden');
-                // --- Show Page 4 (Animation) ---
                 page4_animation.classList.remove('hidden');
-
-                // Load default Sketch.jpg (with capital S)
-                console.log("Loading default image: Sketch.jpg");
                 canvasPlaceholder.style.display = 'block';
-                canvasPlaceholder.textContent = 'Loading sketch...';
-                
+                canvasPlaceholder.textContent = 'Loading gift...';
                 loadImageFromSrc('./Sketch.jpg'); 
-
             }, { once: true }); 
         });
 
-        /**
-         * Loads an image from a source (file, base64, or URL) into the app.
-         */
+        // --- Image Loading & Text Trigger ---
         function loadImageFromSrc(imageSrc) {
             originalImage = new Image();
             originalImage.crossOrigin = "Anonymous"; 
-
             originalImage.onload = () => {
-                if (originalImage.width !== 1024 || originalImage.height !== 1024) {
-                    console.warn(`Warning: Image is ${originalImage.width}x${originalImage.height}. It will be scaled to 1024x1024.`);
-                }
                 canvasPlaceholder.style.display = 'none';
                 renderImage();
+                
+                // --- TEXT ANIMATION TRIGGER ---
+                const text = "Happiest Birthday!";
+                birthdayTextOverlay.innerHTML = ""; 
+                birthdayTextOverlay.classList.remove('hidden-overlay');
+                
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    if (char === " ") {
+                        const space = document.createElement('span');
+                        space.className = "space-span";
+                        space.innerHTML = "&nbsp;";
+                        birthdayTextOverlay.appendChild(space);
+                    } else {
+                        const span = document.createElement('span');
+                        span.textContent = char;
+                        span.className = "letter-span animate-letter";
+                        span.style.animationDelay = `${i * 0.08}s`; // Slightly slower ripple
+                        birthdayTextOverlay.appendChild(span);
+                    }
+                }
             };
             originalImage.onerror = () => {
-                console.error(`Failed to load image source: ${imageSrc}`);
                 canvasPlaceholder.style.display = 'block';
                 canvasPlaceholder.textContent = 'Error loading image. Make sure Sketch.jpg is in the same folder.';
             };
             originalImage.src = imageSrc;
         }
 
-      
-        // --- Animation Logic (No changes here) ---
-        
+        // --- Pixel Animation ---
         function renderImage() {
             if (!originalImage) return; 
-
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-            }
-            
+            if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
             const canvasSize = 1024;
-            pixelCanvas.width = canvasSize;
-            pixelCanvas.height = canvasSize;
-            sourceCanvas.width = canvasSize;
-            sourceCanvas.height = canvasSize;
-
-            sourceCtx.drawImage(
-                originalImage, 0, 0, 
-                originalImage.width, originalImage.height, 
-                0, 0, canvasSize, canvasSize 
-            );
-
+            pixelCanvas.width = canvasSize; pixelCanvas.height = canvasSize;
+            sourceCanvas.width = canvasSize; sourceCanvas.height = canvasSize;
+            sourceCtx.drawImage(originalImage, 0, 0, originalImage.width, originalImage.height, 0, 0, canvasSize, canvasSize);
             generatePixelData(); 
             animate();
         }
@@ -379,11 +389,7 @@
             for (let y = 0; y < h; y += size) { 
                 for (let x = 0; x < w; x += size) { 
                     const index = (y * w + x) * 4; 
-                    const r = imageData[index];
-                    const g = imageData[index + 1];
-                    const b = imageData[index + 2];
                     const a = imageData[index + 3];
-
                     if (a > 20) { 
                         flyingPixels.push({
                             endX: x, endY: y, 
@@ -391,7 +397,7 @@
                             startY: Math.random() * canvasH, 
                             currentX: Math.random() * canvasW, 
                             currentY: Math.random() * canvasH, 
-                            color: `rgba(${r}, ${g}, ${b}, ${a / 255})`,
+                            color: `rgba(${imageData[index]}, ${imageData[index + 1]}, ${imageData[index + 2]}, ${a / 255})`,
                             size: size 
                         });
                     }
@@ -403,14 +409,12 @@
             const w = pixelCanvas.width;
             const h = pixelCanvas.height;
             pixelCtx.clearRect(0, 0, w, h);
-            
             let allPixelsInPlace = true; 
 
             for (const pixel of flyingPixels) {
                 const dx = pixel.endX - pixel.currentX;
                 const dy = pixel.endY - pixel.currentY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-
                 if (dist > 0.5) { 
                     allPixelsInPlace = false; 
                     pixel.currentX += dx * EASING_FACTOR;
@@ -429,6 +433,7 @@
                 animationId = null;
                 console.log("Animation Complete!");
                 birthdayAudio.pause();
+                // REMOVED THE FADE OUT: Text stays visible!
             }
         }
     </script>
@@ -436,4 +441,3 @@
 </html>
 
 
-    
