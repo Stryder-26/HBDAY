@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- YOUR TITLE -->
     <title>Happy Birthday Janhveem</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -229,7 +228,7 @@
             const firebaseConfig = {
               apiKey: "AIzaSyDPH2vLorHnbgXsVBLZz5ZVqeEL49tmeFM",
               authDomain: "course-app-a1d28.firebaseapp.com",
-              databaseURL: "https-course-app-a1d28-default-rtdb.firebaseio.com",
+              databaseURL: "https://course-app-a1d28-default-rtdb.firebaseio.com",
               projectId: "course-app-a1d28",
               storageBucket: "course-app-a1d28.firebasestorage.app",
               messagingSenderId: "626435621011",
@@ -332,11 +331,9 @@
         const birthDate = new Date('2005-11-12T01:00:00'); 
 
         function updateAge() {
-            const now = new Date();
-            // Note: Using 2025-11-11 to get current time in Pune, India for the demo.
-            // This is a stand-in for the actual current date.
-            const demoNow = new Date('2025-11-11T23:22:00+05:30'); // Simulating current time
-            const diffMs = demoNow.getTime() - birthDate.getTime();
+            // ✅ FIXED: Now uses the ACTUAL current time from your system
+            const now = new Date(); 
+            const diffMs = now.getTime() - birthDate.getTime();
 
             if (diffMs < 0) { ageTimer.textContent = "Loading age..."; return; }
             let absDiffMs = diffMs;
@@ -429,7 +426,7 @@
             sourceCanvas.width = canvasSize; sourceCanvas.height = canvasSize;
             sourceCtx.drawImage(originalImage, 0, 0, originalImage.width, originalImage.height, 0, 0, canvasSize, canvasSize);
             
-            // --- ✅ PIXEL SIZE CHANGED TO 1 ---
+            // --- ✅ PIXEL SIZE IS 1 ---
             generatePixelData(1); 
             
             animate();
