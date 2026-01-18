@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Ritika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: black;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .page {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        input {
+            background: #111;
+            border: 1px solid #444;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            width: 260px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 🔐 PASSWORD LOGIN -->
+<div id="authPage" class="page">
+    <h1 class="text-3xl font-bold mb-6">🎉 Welcome Ritika</h1>
+    <input type="password" id="passwordInput" placeholder="Enter Password">
+    <button id="loginBtn"
+        class="mt-4 bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg font-bold">
+        Enter
+    </button>
+    <p id="status" class="mt-4 text-red-400 hidden">Wrong password</p>
+</div>
+
+<!-- 🎂 MAIN CONTENT -->
+<div id="mainContent" class="hidden">
+
+    <!-- Page 1 -->
+    <div id="page1_start" class="page">
+        <button id="startButton"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-10 rounded-full text-2xl">
+            Start
+        </button>
+    </div>
+
+    <!-- Page 2 -->
+    <div id="page2_birthday" class="page hidden">
+        <h1 class="text-6xl font-bold text-center mb-10">
+            Happy Birthday Ritika! 🎉
+        </h1>
+        <button id="continueButton"
+            class="bg-yellow-400 text-black font-bold py-4 px-10 rounded-full text-2xl">
+            View Your Gift
+        </button>
+    </div>
+
+    <!-- Page 3 (Gift Animation Only) -->
+    <div id="page3_animation" class="hidden">
+        <canvas id="pixelCanvas"></canvas>
+        <audio id="birthdayAudio" src="./music.mp3" preload="auto" loop></audio>
+    </div>
+
+</div>
+
+<script>
+/* 🔐 PASSWORD LOGIN */
+const PASSWORD = "Bliss_2019";
+
+document.getElementById("loginBtn").onclick = () => {
+    const input = document.getElementById("passwordInput").value;
+    if (input === PASSWORD) {
+        document.getElementById("authPage").style.display = "none";
+        document.getElementById("mainContent").classList.remove("hidden");
+    } else {
+        document.getElementById("status").classList.remove("hidden");
+    }
+};
+
+/* PAGE FLOW */
+const page1 = document.getElementById("page1_start");
+const page2 = document.getElementById("page2_birthday");
+const page3 = document.getElementById("page3_animation");
+
+document.getElementById("startButton").onclick = () => {
+    page1.classList.add("hidden");
+    page2.classList.remove("hidden");
+};
+
+document.getElementById("continueButton").onclick = () => {
+    page2.classList.add("hidden");
+    page3.classList.remove("hidden");
+    document.getElementById("birthdayAudio").play();
+};
+</script>
+
+</body>
+</html>
