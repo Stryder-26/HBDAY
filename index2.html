@@ -1,43 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Ritika</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Ritika</title>
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: black;
-            color: white;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .page {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        input {
-            background: #111;
-            border: 1px solid #444;
-            padding: 12px;
-            border-radius: 8px;
-            color: white;
-            width: 260px;
-            text-align: center;
-        }
-    </style>
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: Inter, sans-serif;
+    overflow: hidden;
+}
+.page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.hidden { display: none; }
+canvas {
+    width: 100vw;
+    height: 100vh;
+}
+input {
+    background: #111;
+    border: 1px solid #444;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    width: 260px;
+    text-align: center;
+}
+</style>
 </head>
+
 <body>
 
-<!-- 🔐 PASSWORD LOGIN -->
+<!-- 🔐 LOGIN PAGE -->
 <div id="authPage" class="page">
     <h1 class="text-3xl font-bold mb-6">🎉 Welcome Ritika</h1>
     <input type="password" id="passwordInput" placeholder="Enter Password">
@@ -52,61 +56,127 @@
 <div id="mainContent" class="hidden">
 
     <!-- Page 1 -->
-    <div id="page1_start" class="page">
-        <button id="startButton"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-10 rounded-full text-2xl">
+    <div id="page1" class="page">
+        <button id="startBtn"
+            class="bg-blue-500 hover:bg-blue-600 px-10 py-4 rounded-full text-2xl font-bold">
             Start
         </button>
     </div>
 
     <!-- Page 2 -->
-    <div id="page2_birthday" class="page hidden">
-        <h1 class="text-6xl font-bold text-center mb-10">
-            Happy Birthday Ritika! 🎉
+    <div id="page2" class="page hidden">
+        <h1 class="text-6xl font-bold mb-10 text-center">
+            Happy Birthday Ritika 🎂
         </h1>
-        <button id="continueButton"
-            class="bg-yellow-400 text-black font-bold py-4 px-10 rounded-full text-2xl">
+        <button id="giftBtn"
+            class="bg-yellow-400 text-black px-10 py-4 rounded-full text-2xl font-bold">
             View Your Gift
         </button>
     </div>
 
-    <!-- Page 3 (Gift Animation Only) -->
-    <div id="page3_animation" class="hidden">
+    <!-- Page 3 -->
+    <div id="page3" class="page hidden">
         <canvas id="pixelCanvas"></canvas>
-        <audio id="birthdayAudio" src="./music.mp3" preload="auto" loop></audio>
+        <canvas id="sourceCanvas" style="display:none;"></canvas>
     </div>
-
 </div>
+
+<audio id="birthdayAudio" src="./music.mp3" preload="auto" loop></audio>
 
 <script>
 /* 🔐 PASSWORD LOGIN */
 const PASSWORD = "Bliss_2019";
+const audio = document.getElementById("birthdayAudio");
 
-document.getElementById("loginBtn").onclick = () => {
-    const input = document.getElementById("passwordInput").value;
-    if (input === PASSWORD) {
-        document.getElementById("authPage").style.display = "none";
-        document.getElementById("mainContent").classList.remove("hidden");
+loginBtn.onclick = () => {
+    if (passwordInput.value === PASSWORD) {
+        authPage.style.display = "none";
+        mainContent.classList.remove("hidden");
+
+        audio.muted = true;
+        audio.play().then(() => audio.muted = false);
     } else {
-        document.getElementById("status").classList.remove("hidden");
+        status.classList.remove("hidden");
     }
 };
 
 /* PAGE FLOW */
-const page1 = document.getElementById("page1_start");
-const page2 = document.getElementById("page2_birthday");
-const page3 = document.getElementById("page3_animation");
-
-document.getElementById("startButton").onclick = () => {
+startBtn.onclick = () => {
     page1.classList.add("hidden");
     page2.classList.remove("hidden");
 };
 
-document.getElementById("continueButton").onclick = () => {
+giftBtn.onclick = () => {
     page2.classList.add("hidden");
     page3.classList.remove("hidden");
-    document.getElementById("birthdayAudio").play();
+    startGiftAnimation();
 };
+
+/* 🎨 PIXEL ANIMATION */
+const pixelCanvas = document.getElementById("pixelCanvas");
+const pixelCtx = pixelCanvas.getContext("2d");
+const sourceCanvas = document.getElementById("sourceCanvas");
+const sourceCtx = sourceCanvas.getContext("2d");
+
+const SIZE = 1024;
+pixelCanvas.width = SIZE;
+pixelCanvas.height = SIZE;
+sourceCanvas.width = SIZE;
+sourceCanvas.height = SIZE;
+
+let pixels = [];
+const EASE = 0.25;
+
+function startGiftAnimation() {
+    loadImage("./Sketch2.jpg");
+}
+
+function loadImage(src) {
+    const img = new Image();
+    img.onload = () => {
+        sourceCtx.drawImage(img, 0, 0, SIZE, SIZE);
+        createPixels();
+        animate();
+    };
+    img.onerror = () => alert("Sketch2.jpg not found!");
+    img.src = src;
+}
+
+function createPixels() {
+    pixels = [];
+    const data = sourceCtx.getImageData(0, 0, SIZE, SIZE).data;
+
+    for (let y = 0; y < SIZE; y += 2) {
+        for (let x = 0; x < SIZE; x += 2) {
+            const i = (y * SIZE + x) * 4;
+            if (data[i + 3] > 20) {
+                pixels.push({
+                    x: Math.random() * SIZE,
+                    y: Math.random() * SIZE,
+                    tx: x,
+                    ty: y,
+                    c: `rgba(${data[i]},${data[i+1]},${data[i+2]},1)`
+                });
+            }
+        }
+    }
+}
+
+function animate() {
+    pixelCtx.clearRect(0, 0, SIZE, SIZE);
+    let done = true;
+
+    for (const p of pixels) {
+        p.x += (p.tx - p.x) * EASE;
+        p.y += (p.ty - p.y) * EASE;
+        pixelCtx.fillStyle = p.c;
+        pixelCtx.fillRect(p.x, p.y, 2, 2);
+
+        if (Math.abs(p.x - p.tx) > 0.5) done = false;
+    }
+
+    if (!done) requestAnimationFrame(animate);
+}
 </script>
 
 </body>
